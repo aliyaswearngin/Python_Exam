@@ -3,9 +3,11 @@ import sys
 def validate_sequence(sequence, k):
     if len(sequence) < k:
         return False
+#edit this section to only accept capital letters ACGT
     for nucleotide in sequence:
-        if nucleotide in '1234567890':
+        if nucleotide not in "ACGT":
             return False
+
     return True
 
 def update_kmer_count(kmer_data, kmer, next_char):
