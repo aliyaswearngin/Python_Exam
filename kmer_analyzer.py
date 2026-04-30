@@ -11,8 +11,9 @@ def validate_sequence(sequence, k):
     return True
 
 def update_kmer_count(kmer_data, kmer, next_char):
+    # change starting count to zero so doesn't double count first time kmer appears
     if kmer not in kmer_data:
-        kmer_data[kmer] = {'count': 1, 'next_chars': {}}
+        kmer_data[kmer] = {'count': 0, 'next_chars': {}}
     
     kmer_data[kmer]['count'] += 1
     
