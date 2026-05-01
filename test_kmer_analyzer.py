@@ -39,9 +39,7 @@ def test_validate_rejects_lower_case_letters():
 #############################
 ## update_kmer_count tests ##
 #############################
-#how many times kmer appears
-#what character comes after kmer in the sequence
-# creates a new entry for new k-mer found-# double counts the first time-need to fix this
+
 
 # test what first insertion of kmer returns 
 def test_update_kmer_first_insert():
@@ -84,4 +82,47 @@ def test_update_multiple_kmers():
     assert data["AT"]["count"] == 1
     assert data["TG"]["count"] == 1
 
+####################################
+## count_kmers_with_context tests ##
+####################################
 
+#basic function-pass
+def test_basic_kmers():
+    result = count_kmers_with_context("ATGTGA", 2)
+
+    assert result["AT"]["count"] == 1
+    assert result["TG"]["count"] == 2
+    assert result["GT"]["count"] == 1
+
+# Overlapping k-mers - failed
+def test_overlapping_kmers():
+    result = count_kmers_with_context("ATAT", 2)
+    
+    assert result["AT"]["count"] == 2
+    assert result["TA"]["count"] == 1
+
+#Repeated patterns- failed
+def test_repeated_pattern():
+    result = count_kmers_with_context("AAAA", 2)
+
+    assert result["AA"]["count"] == 3  
+
+#Next-character tracking correctness
+def test_next_char_tracking():
+    result = count_kmers_with_context("ATGTGA", 2)
+
+    assert result["TG"]["count"] == 2
+    assert result["TG"]["next_chars"]["T"] == 1
+    assert result["TG"]["next_chars"]["A"] == 1
+    
+# Edge case: sequence too short
+def test_short_sequence():
+    result = count_kmers_with_context("A", 2)
+
+    assert result == {}
+
+#test is recognize last kmer if no next character - failed   
+def test_last_kmer_handling():
+    result = count_kmers_with_context("ATG", 2)
+
+    assert "TG" in result 
