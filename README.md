@@ -9,7 +9,7 @@ To run `kmer_analyzer.py` in the shell terminal use:
 Example:
   `python kmer_analyzer.py dna.txt 2 output.txt`
 
-###### Input format:
+##### Input format:
 Each line in the input file should contain a DNA sequence.
 
 Valid characters: A, C, G, T (uppercase only)
@@ -17,7 +17,7 @@ Valid characters: A, C, G, T (uppercase only)
 Example:
 ACTGTCGATA
 
-###### Output format
+##### Output format
 The output file contains each k-mer followed by the nucleotide and frequency of the next character.
 
 Format:
@@ -27,7 +27,7 @@ Example:
   GAC T:1
   CTA G:2
 
-###### Testing 
+##### Testing 
 This project was tested using pytest. Tests for each function in `kmer_analyzer.py` can be found in the script `test_kmer_analyzer.py`.
 
-###### AI Statement: AI was used to help generate test ideas and code for each function and code on how to fix errors exposed by tests. AI was also used to write the docstrings for each function.
+##### AI Statement: AI was used to help generate test ideas and code for each function and code on how to fix errors exposed by tests. AI was also used to write the docstrings for each function.
