@@ -205,3 +205,25 @@ def test_main_multiple_sequences(tmp_path, monkeypatch):
     # Should contain results from BOTH sequences
     assert "AT" in content
     assert "TG" in content
+
+#verify correct warning when kmer is longer than sequence 
+def test_warning_when_k_larger_than_sequence(tmp_path, monkeypatch, capfd):
+    import sys
+
+    input_file = tmp_path / "input.txt"
+    input_file.write_text("ATG\n")
+
+    output_file = tmp_path / "output.txt"
+
+    monkeypatch.setattr(sys, "argv", [
+        "script.py",
+        str(input_file),
+        "10",   # k is larger than sequence
+        str(output_file)
+    ])
+
+    main()
+
+    out, err = capfd.readouterr()
+
+    assert "Sequence length is shorter than k" in out
