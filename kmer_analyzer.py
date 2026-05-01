@@ -63,6 +63,8 @@ def main():
     output_file = sys.argv[3]
     
     print(f"Reading sequences from {sequence_file}...")
+    
+    kmer_data = {} #move outside loop
 
     with open(sequence_file, 'r') as f:
         for sequence in f:
@@ -72,9 +74,21 @@ def main():
                 print(f"  Warning: Skipping sequence")
                 continue
             
-            kmer_data = count_kmers_with_context(sequence, k) 
+            new_data = count_kmers_with_context(sequence, k) 
             
-            write_results_to_file(kmer_data, output_file)
+            #merge results
+            for kmer in new_data:
+                if kmer not in kmer_data:
+                    kmer_data[kmer] = new_data[kmer]
+                else:
+                    kmer_data[kmer]['count'] += new_data[kmer]['count']
+                    
+                    for char, freq in new_data[kmer]['next_chars'].items():
+                        kmer_data[kmer]['next_chars'][char] = (
+                            kmer_data[kmer]['next_chars'].get(char, 0) + freq
+                        )
 
-if __name__ == '__main__':
-    main()
+    #write ONCE after loop so all inputs included
+    write_results_to_file(kmer_data, output_file)
+            
+  
