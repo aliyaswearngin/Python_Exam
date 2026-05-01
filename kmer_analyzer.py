@@ -165,5 +165,8 @@ def main():
 
     #write ONCE after loop so all inputs included
     write_results_to_file(kmer_data, output_file)
+    
+if __name__ == "__main__":
+  main()
             
   
