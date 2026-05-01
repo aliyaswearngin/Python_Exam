@@ -86,7 +86,7 @@ def test_update_multiple_kmers():
 ## count_kmers_with_context tests ##
 ####################################
 
-#basic function-pass
+#basic function
 def test_basic_kmers():
     result = count_kmers_with_context("ATGTGA", 2)
 
@@ -94,14 +94,14 @@ def test_basic_kmers():
     assert result["TG"]["count"] == 2
     assert result["GT"]["count"] == 1
 
-# Overlapping k-mers - failed
+# Overlapping k-mers 
 def test_overlapping_kmers():
     result = count_kmers_with_context("ATAT", 2)
     
     assert result["AT"]["count"] == 2
     assert result["TA"]["count"] == 1
 
-#Repeated patterns- failed
+#Repeated patterns
 def test_repeated_pattern():
     result = count_kmers_with_context("AAAA", 2)
 
@@ -121,8 +121,57 @@ def test_short_sequence():
 
     assert result == {}
 
-#test is recognize last kmer if no next character - failed   
+#test is recognize last kmer if no next character    
 def test_last_kmer_handling():
     result = count_kmers_with_context("ATG", 2)
 
     assert "TG" in result 
+    
+#################################
+## write_results_to_file tests ##
+#################################
+#Takes your processed k-mer dictionary and writes it to a file
+#this function seems good
+
+#test basic funtion
+def test_write_results_basic(tmp_path):
+    data = {
+        "AT": {"count": 2, "next_chars": {"G": 1, "C": 1}}
+    }
+
+    file = tmp_path / "output.txt"
+
+    write_results_to_file(data, file)
+
+    content = file.read_text()
+
+    assert "AT C:1 G:1" in content
+
+#test how sorts multiple inputs 
+def test_write_results_sorted(tmp_path):
+    data = {
+        "TG": {"count": 1, "next_chars": {"A": 1}},
+        "AT": {"count": 1, "next_chars": {"G": 1}}
+    }
+
+    file = tmp_path / "output.txt"
+    write_results_to_file(data, file)
+
+    content = file.read_text().splitlines()
+
+    assert content[0].startswith("AT")
+    assert content[1].startswith("TG")
+
+# test how handles multiple next characters  
+def test_write_multiple_next_chars(tmp_path):
+    data = {
+        "AT": {"count": 2, "next_chars": {"G": 2, "C": 1}}
+    }
+
+    file = tmp_path / "output.txt"
+    write_results_to_file(data, file)
+
+    content = file.read_text()
+
+    assert "G:2" in content
+    assert "C:1" in content
