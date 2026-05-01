@@ -131,7 +131,7 @@ def test_last_kmer_handling():
 ## write_results_to_file tests ##
 #################################
 #Takes your processed k-mer dictionary and writes it to a file
-#this function seems good
+
 
 #test basic funtion
 def test_write_results_basic(tmp_path):
@@ -175,3 +175,33 @@ def test_write_multiple_next_chars(tmp_path):
 
     assert "G:2" in content
     assert "C:1" in content
+    
+################
+## main tests ##
+################
+
+#test how writes files for multiple sequences 
+import sys
+def test_main_multiple_sequences(tmp_path, monkeypatch):
+    # create input file with TWO sequences
+    input_file = tmp_path / "input.txt"
+    input_file.write_text("ATG\nTGA\n")
+
+    output_file = tmp_path / "output.txt"
+
+    # fake command-line arguments
+    monkeypatch.setattr(sys, "argv", [
+        "script.py",
+        str(input_file),
+        "2",
+        str(output_file)
+    ])
+
+    # run main
+    main()
+
+    content = output_file.read_text()
+
+    # Should contain results from BOTH sequences
+    assert "AT" in content
+    assert "TG" in content
