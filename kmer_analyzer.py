@@ -25,12 +25,19 @@ def update_kmer_count(kmer_data, kmer, next_char):
 
 def count_kmers_with_context(sequence, k):
     kmer_data = {}
-    
-    for i in range(len(sequence) - k):
+    #change to k + 1 so range includes overlapping and last kmer
+    for i in range(len(sequence) - k + 1):
         kmer = sequence[i:i+k]
-        next_char = sequence[i+k]
-        
-        kmer_data = update_kmer_count(kmer_data, kmer, next_char)
+        # add line to say get next_ char if i + k is in range of sequence  
+        if i + k < len(sequence):
+          next_char = sequence[i+k]
+          kmer_data = update_kmer_count(kmer_data, kmer, next_char)
+        #if not in range, then last k mer should stil be counted
+        else:
+            # get last k-mer even if no next character
+            if kmer not in kmer_data:
+                kmer_data[kmer] = {'count': 0, 'next_chars': {}}
+            kmer_data[kmer]['count'] += 1
     
     return kmer_data
 
