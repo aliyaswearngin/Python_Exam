@@ -32,7 +32,7 @@ def count_kmers_with_context(sequence, k):
         if i + k < len(sequence):
           next_char = sequence[i+k]
           kmer_data = update_kmer_count(kmer_data, kmer, next_char)
-        #if not in range, then last k mer should stil be counted
+        #add else so if next character not in range, last k mer should still be counted
         else:
             # get last k-mer even if no next character
             if kmer not in kmer_data:
