@@ -139,19 +139,23 @@ def main():
     
     print(f"Reading sequences from {sequence_file}...")
     
-    kmer_data = {} #move outside loop
+    kmer_data = {}
 
     with open(sequence_file, 'r') as f:
         for sequence in f:
-            sequence = sequence.strip()
-
+            sequence = sequence.strip().upper()
+            
+            # validate and give reason for why sequence is incorrect 
             if not validate_sequence(sequence, k):
-                print(f"  Warning: Skipping sequence")
+                if len(sequence) < k:
+                    print(f"  Warning: Sequence length is shorter than k (k={k}), skipping.")
+                else:
+                    print(f"  Warning: Invalid characters in sequence, skipping.")
                 continue
             
-            new_data = count_kmers_with_context(sequence, k) 
+            new_data = count_kmers_with_context(sequence, k)
             
-            #merge results
+            # merge results
             for kmer in new_data:
                 if kmer not in kmer_data:
                     kmer_data[kmer] = new_data[kmer]
@@ -163,10 +167,11 @@ def main():
                             kmer_data[kmer]['next_chars'].get(char, 0) + freq
                         )
 
-    #write ONCE after loop so all inputs included
+    # write ONCE after loop
     write_results_to_file(kmer_data, output_file)
-    
+
+
 if __name__ == "__main__":
-  main()
+    main()
             
   
